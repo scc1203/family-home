@@ -53,6 +53,32 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
+
+        /* Onboarding 弹窗淡入上浮动画 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(16px) scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        .animate-fade-in-up {
+            animation: fadeInUp 0.45s ease-out forwards;
+        }
+
+        /* 全屏遮罩层 */
+        .help-backdrop {
+            background: radial-gradient(circle at top, rgba(255,255,255,0.15), rgba(0,0,0,0.75));
+        }
+
+        /* 右上角帮助按钮，兼容移动端容易点到 */
+        .help-fab {
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+        }
     </style>
 </head>
 <body class="h-screen w-screen relative bg-gray-900 text-gray-100 flex items-center justify-center">
@@ -62,6 +88,99 @@
         
         <div class="absolute inset-0 bg-gray-900/30 mix-blend-overlay"></div>
         <div class="absolute inset-0 bg-black/20"></div>
+    </div>
+
+    <!-- 右上角帮助按钮 -->
+    <button
+        id="help-toggle"
+        type="button"
+        class="help-fab fixed top-5 right-5 z-30 w-9 h-9 md:w-10 md:h-10 rounded-full border border-white/30 bg-white/10 flex items-center justify-center text-xs md:text-sm text-white/80 hover:bg-white/20 hover:border-white/60 transition-all shadow-lg shadow-black/20"
+        aria-label="使用说明"
+    >
+        <span class="font-semibold tracking-wider">?</span>
+    </button>
+
+    <!-- 帮助 / 使用说明弹窗 -->
+    <div
+        id="help-modal"
+        class="fixed inset-0 z-20 hidden items-center justify-center help-backdrop bg-black/50"
+    >
+        <!-- 点击遮罩关闭 -->
+        <div
+            id="help-backdrop-click"
+            class="absolute inset-0"
+        ></div>
+
+        <div
+            class="relative glass-panel mx-4 md:mx-0 max-w-lg w-full rounded-2xl px-6 py-6 md:px-8 md:py-8 text-left text-white/90 opacity-0 translate-y-4"
+        >
+            <!-- 关闭按钮 -->
+            <button
+                id="help-close"
+                type="button"
+                class="absolute -top-3 -right-3 w-7 h-7 rounded-full bg-black/60 border border-white/20 flex items-center justify-center text-xs text-white/70 hover:bg-black/80 hover:text-white transition"
+                aria-label="关闭使用说明"
+            >
+                ✕
+            </button>
+
+            <div class="space-y-4 md:space-y-5">
+                <div class="space-y-1">
+                    <p class="text-[11px] uppercase tracking-[0.35em] text-white/40">
+                        WELCOME HOME
+                    </p>
+                    <h2 class="text-xl md:text-2xl font-light font-serif-sc tracking-wide text-white">
+                        欢迎回家 · 使用小提示
+                    </h2>
+                </div>
+
+                <p class="text-xs md:text-sm text-white/70 leading-relaxed">
+                    下面这几个小步骤，可以帮你更顺畅地进入家里的云端空间。如果不确定，随时点右上角「?」再看一遍。
+                </p>
+
+                <div class="space-y-3 md:space-y-4 text-[13px] md:text-sm">
+                    <!-- 门禁说明 -->
+                    <div class="rounded-xl border border-white/15 bg-white/5 px-4 py-3 flex gap-3 items-start">
+                        <div class="text-lg leading-none pt-[2px]">🚪</div>
+                        <div class="space-y-1">
+                            <p class="font-medium text-white/90">门禁说明（极空间 / Zconnect）</p>
+                            <p class="text-white/70 leading-relaxed text-xs md:text-[13px]">
+                                第一次点击入口，如果跳转到登录页，
+                                请使用你的极空间账号密码登录，并勾选「保持登录」。这里就像进家门的门禁，通过一次后，下次会自动放行。
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- 添加到主屏幕 -->
+                    <div class="rounded-xl border border-white/15 bg-white/5 px-4 py-3 flex gap-3 items-start">
+                        <div class="text-lg leading-none pt-[2px]">📱</div>
+                        <div class="space-y-1">
+                            <p class="font-medium text-white/90">最佳体验（添加到主屏幕）</p>
+                            <p class="text-white/70 leading-relaxed text-xs md:text-[13px]">
+                                推荐在浏览器菜单里点「分享」→「添加到主屏幕」。
+                                这样就像一个独立 App，点一下图标就能全屏进入家庭资源主页，体验更沉浸、更简洁。
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- 云端阅读提示 -->
+                    <div class="rounded-xl border border-white/15 bg-white/5 px-4 py-3 flex gap-3 items-start">
+                        <div class="text-lg leading-none pt-[2px]">📚</div>
+                        <div class="space-y-1">
+                            <p class="font-medium text-white/90">图书馆提示（云端阅读）</p>
+                            <p class="text-white/70 leading-relaxed text-xs md:text-[13px]">
+                                第一次进入「书籍漫画」时，需要单独注册 / 登录一个账号，
+                                这是你个人的云端书架。只要注册一次，你的阅读记录、书签都会长期保留在这里。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="text-[11px] text-white/45 tracking-widest uppercase pt-1">
+                    如果有不会用的地方，可以随时问scc，或者再打开这个小窗查看说明。
+                </p>
+            </div>
+        </div>
     </div>
 
     <main class="relative z-10 p-6 md:p-16 max-w-4xl w-full text-center flex flex-col items-center space-y-12 animate-fade-in">
@@ -114,6 +233,68 @@
             Harbour Family Access <span class="text-xs opacity-60 ml-1">⛰️</span>
         </p>
     </footer>
+
+    <script>
+        (function () {
+            const STORAGE_KEY = 'fh_hasVisited';
+
+            const modal = document.getElementById('help-modal');
+            const helpToggle = document.getElementById('help-toggle');
+            const helpClose = document.getElementById('help-close');
+            const helpBackdropClick = document.getElementById('help-backdrop-click');
+
+            if (!modal || !helpToggle) return;
+
+            const modalCard = modal.querySelector('.glass-panel');
+
+            function openModal() {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+
+                if (modalCard) {
+                    modalCard.classList.remove('opacity-0', 'translate-y-4');
+                    modalCard.classList.add('animate-fade-in-up');
+                }
+            }
+
+            function closeModal() {
+                if (modalCard) {
+                    modalCard.classList.remove('animate-fade-in-up');
+                    modalCard.classList.add('opacity-0', 'translate-y-4');
+                }
+
+                // 给一点时间做退场动画，这里简单用 setTimeout
+                setTimeout(function () {
+                    modal.classList.add('hidden');
+                    modal.classList.remove('flex');
+                }, 220);
+            }
+
+            // 首次访问自动弹出
+            try {
+                const visited = localStorage.getItem(STORAGE_KEY);
+                if (!visited) {
+                    openModal();
+                    localStorage.setItem(STORAGE_KEY, 'true');
+                }
+            } catch (e) {
+                // 如果浏览器禁用了 localStorage，就只做正常的手动打开
+            }
+
+            // 右上角 ? 手动打开
+            helpToggle.addEventListener('click', openModal);
+
+            // 关闭按钮
+            if (helpClose) {
+                helpClose.addEventListener('click', closeModal);
+            }
+
+            // 点击遮罩关闭
+            if (helpBackdropClick) {
+                helpBackdropClick.addEventListener('click', closeModal);
+            }
+        })();
+    </script>
 
 </body>
 </html>
